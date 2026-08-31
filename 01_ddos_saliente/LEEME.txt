@@ -1,0 +1,51 @@
+PRUEBA 1: DDoS SALIENTE (patron botnet)
+=========================================
+
+OBJETIVO
+--------
+Simular un dispositivo comprometido dentro del hogar que genera trafico
+masivo hacia afuera (como haria un bot de una botnet tipo Mirai atacando
+a un tercero). Se valida que el sistema detecte el ORIGEN del ataque
+(el dispositivo comprometido), no solo el destino.
+
+EQUIPOS
+-------
+PC1 (atacante / "dispositivo comprometido"): cualquier laptop conectada
+    al router Archer AX12, IP ejemplo 192.168.18.13
+PC2 (victima simulada): otro dispositivo en la misma red, IP ejemplo
+    192.168.18.22 (puede ser la Raspberry Pi u otro equipo de prueba,
+    NUNCA un servidor real fuera de tu red)
+
+PASO 1: CREAR EL ENTORNO VIRTUAL (en PC1)
+-------------------------------------------
+cd pruebas_ids\01_ddos_saliente
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+PASO 2: EJECUTAR EL SERVICIO DE INFERENCIA (en la laptop, si es distinta a PC1)
+---------------------------------------------------------------------------------
+Ver instrucciones en 00_LEEME_GENERAL.txt
+
+PASO 3: LANZAR EL ATAQUE (en PC1)
+------------------------------------
+venv\Scripts\Activate.ps1
+python ataque_ddos_saliente.py --destino 192.168.18.22 --puerto 80 --hilos 50 --duracion 20
+
+Parametros:
+  --destino   IP de PC2 (la victima simulada)
+  --puerto    puerto TCP destino (80, 443, o el que tenga abierto PC2)
+  --hilos     cantidad de conexiones simultaneas (mas hilos = mas volumen)
+  --duracion  segundos que dura el ataque
+
+RESULTADO ESPERADO
+-------------------
+En la consola de servicio_inferencia.exe deberias ver alertas con
+origen=192.168.18.13 (la PC1 atacante), tanto del detector de firmas
+("Posible flooding DoS/DDoS desde 192.168.18.13") como, si el flujo
+supera 30 paquetes y el modelo esta muy seguro, tambien del detector
+de aprendizaje automatico (etiqueta "ataque").
+
+Verifica en el log que el ORIGEN reportado sea la PC1, confirmando que
+el sistema detecta correctamente cual dispositivo del hogar es el que
+esta comprometido, no solo que la PC2 esta recibiendo trafico raro.

@@ -1,0 +1,54 @@
+PRUEBA 2: ESCANEO DE PUERTOS / RECONOCIMIENTO
+================================================
+
+OBJETIVO
+--------
+Simular la fase de reconocimiento que hace un atacante (o un malware
+tipo Mirai) antes de intentar comprometer un dispositivo: recorrer
+muchos puertos de un mismo host para ver cuales estan abiertos.
+
+RESULTADO ESPERADO (segun la tabla de 00_LEEME_GENERAL.txt)
+--------------------------------------------------------------
+Un escaneo rapido genera muchos paquetes por segundo desde el mismo
+origen. Es probable que el detector de FIRMAS lo marque como
+"Posible flooding DoS/DDoS", aunque la etiqueta sea imprecisa (no es
+un flood real, es un escaneo). El detector de IA probablemente NO lo
+marque, porque el modelo fue entrenado para reconocer patrones de
+flood/malware, no de escaneo puro. Esto es un resultado valido:
+demuestra que el sistema puede reaccionar ante actividad anomala
+aunque la clasifique con una etiqueta que no es 100% precisa.
+
+ESTA PRUEBA NO REQUIERE ENTORNO VIRTUAL DE PYTHON
+----------------------------------------------------
+Se usa Nmap directamente, una herramienta estandar de la industria.
+
+PASO 1: INSTALAR NMAP (en PC1, el equipo atacante)
+------------------------------------------------------
+Descargar e instalar desde: https://nmap.org/download.html
+(elige el instalador de Windows si tu PC1 es Windows)
+
+PASO 2: EJECUTAR EL SERVICIO DE INFERENCIA
+----------------------------------------------
+Ver instrucciones en 00_LEEME_GENERAL.txt
+
+PASO 3: LANZAR EL ESCANEO (en PC1, desde cmd o PowerShell)
+----------------------------------------------------------------
+nmap -p 1-1000 -T4 192.168.18.22
+
+Donde 192.168.18.22 es la IP del dispositivo que vas a escanear
+(puede ser la Raspberry Pi u otro equipo de tu red de pruebas).
+
+Parametros:
+  -p 1-1000   escanea los primeros 1000 puertos
+  -T4         velocidad agresiva (mas paquetes por segundo, mas
+              probable que dispare el detector de firmas)
+
+Para un escaneo mas lento (probar el caso "no deteccion"):
+nmap -p 1-1000 -T2 192.168.18.22
+
+RESULTADO A DOCUMENTAR
+-------------------------
+Corre el escaneo con -T4 y con -T2 por separado, y anota si en cada
+caso salio o no alguna alerta. Esto te da evidencia de que la
+deteccion depende de la velocidad del escaneo, un hallazgo relevante
+para tu tesis.

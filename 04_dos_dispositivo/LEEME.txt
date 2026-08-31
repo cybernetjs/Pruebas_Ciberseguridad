@@ -1,0 +1,42 @@
+PRUEBA 4: DENEGACION DE SERVICIO (DoS) CONTRA UN DISPOSITIVO
+================================================================
+
+OBJETIVO
+--------
+A diferencia de la prueba 1 (DDoS con muchos hilos simulando una
+botnet), aqui se valida el caso mas simple: un solo origen enviando
+trafico masivo hacia un solo destino. Es el escenario clasico de DoS
+(no distribuido).
+
+EQUIPOS
+-------
+PC1 (atacante): la laptop u otro equipo
+PC2 (victima): otro dispositivo de tu red de pruebas
+
+PASO 1: CREAR EL ENTORNO VIRTUAL (en PC1)
+---------------------------------------------
+cd pruebas_ids\04_dos_dispositivo
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+PASO 2: EJECUTAR EL SERVICIO DE INFERENCIA
+----------------------------------------------
+Ver instrucciones en 00_LEEME_GENERAL.txt
+
+PASO 3: LANZAR EL ATAQUE (en PC1)
+--------------------------------------
+venv\Scripts\Activate.ps1
+python ataque_dos.py --destino 192.168.18.22 --puerto 80 --duracion 20
+
+Este script usa un solo hilo pero envia paquetes lo mas rapido
+posible (sin threading), para simular el patron de un dispositivo
+individual comprometido, no una botnet completa.
+
+RESULTADO ESPERADO
+---------------------
+Alertas con origen=IP de PC1, tanto de firmas como (si el volumen
+del flujo supera 30 paquetes) del modelo de IA con alta confianza.
+Este es el escenario mas parecido a los datos de entrenamiento de
+IoT-23 (Mirai), asi que es donde se espera el mejor desempeno del
+sistema.

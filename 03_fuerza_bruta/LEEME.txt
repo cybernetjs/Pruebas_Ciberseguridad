@@ -1,0 +1,60 @@
+PRUEBA 3: FUERZA BRUTA DE CREDENCIALES (vector Mirai)
+========================================================
+
+OBJETIVO
+--------
+Replicar el vector de ataque de la botnet Mirai que mencionas en tu
+marco teorico: intentos repetidos de login contra un servicio con
+contrasena de fabrica (Telnet o SSH).
+
+IMPORTANTE: SOLO PRUEBA ESTO CONTRA UN DISPOSITIVO PROPIO
+--------------------------------------------------------------
+Nunca ejecutes esto contra un dispositivo que no sea tuyo o de tu
+laboratorio de pruebas. Usa un Raspberry Pi de prueba, una VM, o un
+router viejo que ya no uses, con SSH habilitado a proposito para
+la prueba.
+
+EQUIPOS
+-------
+PC1 (atacante): la laptop u otro equipo con Python
+PC2 (victima de prueba): un dispositivo con SSH abierto, con un
+    usuario/contrasena de prueba que TU definas (ejemplo: usuario
+    "pi", contrasena "raspberry", el default clasico de Raspberry Pi)
+
+PASO 1: CREAR EL ENTORNO VIRTUAL (en PC1)
+---------------------------------------------
+cd pruebas_ids\03_fuerza_bruta
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+PASO 2: EJECUTAR EL SERVICIO DE INFERENCIA
+----------------------------------------------
+Ver instrucciones en 00_LEEME_GENERAL.txt
+
+PASO 3: LANZAR EL ATAQUE (en PC1)
+--------------------------------------
+venv\Scripts\Activate.ps1
+python fuerza_bruta.py --destino 192.168.18.22 --puerto 22 --usuario pi --diccionario diccionario.txt --retardo 0
+
+Parametros:
+  --destino     IP de PC2
+  --puerto      puerto SSH (22 por defecto)
+  --usuario     usuario a probar
+  --diccionario archivo de texto con una contrasena por linea
+  --retardo     segundos de espera entre intento e intento
+                (usa 0 para ataque rapido, 1 o 2 para uno lento
+                y comparar los dos casos)
+
+RESULTADO ESPERADO
+---------------------
+Con --retardo 0 (rapido): es probable que se generen suficientes
+conexiones por segundo como para que el detector de firmas dispare
+una alerta.
+
+Con --retardo 2 (lento, "low and slow"): es probable que NO se
+detecte nada, porque el volumen es bajo. Esto tambien es un
+resultado valido para documentar: confirma la limitacion del
+sistema ante ataques lentos, igual que con el C2 beaconing.
+
+Corre ambos casos y compara los resultados en tu tabla de hallazgos.

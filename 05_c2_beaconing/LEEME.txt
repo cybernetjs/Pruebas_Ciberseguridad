@@ -1,0 +1,63 @@
+PRUEBA 5: CONEXION A C2 Y EXFILTRACION (BEACONING)
+======================================================
+
+OBJETIVO
+--------
+Simular el comportamiento de un dispositivo infectado que se reporta
+periodicamente a un servidor de comando y control (C2), enviando
+pequenas cantidades de datos cada cierto tiempo (patron "low and
+slow", tipico de malware real para evadir deteccion).
+
+RESULTADO ESPERADO (limitacion conocida del sistema actual)
+----------------------------------------------------------------
+Se espera que el sistema NO detecte esta prueba. El modelo de IA
+usa 7 caracteristicas basadas en volumen (conteo de paquetes y
+bytes), y ademas requiere un minimo de 30 paquetes en el flujo antes
+de evaluar. El detector de firmas necesita superar 300 paquetes por
+segundo. Un beacon que manda unos pocos paquetes cada 10-30 segundos
+nunca acumula ni el volumen ni la velocidad necesarios.
+
+Esta prueba se incluye a proposito para generar evidencia empirica
+de esta limitacion, documentable en el capitulo de discusion de tu
+tesis como trabajo futuro (por ejemplo, incorporar caracteristicas de
+periodicidad/regularidad temporal entre conexiones, tipicas de los
+sistemas de deteccion de beaconing en la industria).
+
+EQUIPOS
+-------
+PC1 ("dispositivo infectado"): la laptop u otro equipo
+PC2 ("servidor C2" simulado): otro dispositivo de tu red que tenga
+    un servidor HTTP simple corriendo (puedes usar el propio Python:
+    en PC2 ejecuta: python -m http.server 8080)
+
+PASO 1: CREAR EL ENTORNO VIRTUAL (en PC1)
+---------------------------------------------
+cd pruebas_ids\05_c2_beaconing
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+PASO 2: PREPARAR EL "SERVIDOR C2" (en PC2)
+-----------------------------------------------
+python -m http.server 8080
+
+PASO 3: EJECUTAR EL SERVICIO DE INFERENCIA
+----------------------------------------------
+Ver instrucciones en 00_LEEME_GENERAL.txt
+
+PASO 4: LANZAR EL BEACON (en PC1)
+--------------------------------------
+venv\Scripts\Activate.ps1
+python simulador_beacon.py --destino 192.168.18.22 --puerto 8080 --intervalo 15 --repeticiones 20
+
+Parametros:
+  --intervalo     segundos entre cada "reporte" del beacon
+  --repeticiones  cuantas veces se conecta en total
+
+RESULTADO A DOCUMENTAR
+--------------------------
+Deja correr la prueba completa (con --intervalo 15 y --repeticiones 20
+son 5 minutos aprox). Confirma en la consola del servicio de
+inferencia que NO aparecen alertas durante toda la prueba, y adjunta
+esa captura junto con el CSV de eventos como evidencia de la
+limitacion documentada.

@@ -1,0 +1,10 @@
+raspberry
+admin
+12345
+root
+password
+123456
+default
+letmein
+test
+qwerty

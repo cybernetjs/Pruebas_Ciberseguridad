@@ -1,0 +1,56 @@
+PRUEBA 6: RESOLUCION DNS SOSPECHOSA (DGA)
+=============================================
+
+OBJETIVO
+--------
+Simular el comportamiento de malware que genera nombres de dominio
+de forma algoritmica (Domain Generation Algorithm) para encontrar su
+servidor de comando y control, resolviendo muchos dominios nuevos y
+aleatorios en poco tiempo.
+
+RESULTADO ESPERADO (limitacion conocida del sistema actual)
+----------------------------------------------------------------
+Se espera que el sistema NO detecte esta prueba, por una razon
+distinta a la de C2 beaconing: tu extractor de caracteristicas
+(extractor_caracteristicas.cpp) solo analiza encabezados de red
+(IP, puerto, protocolo, tamano); NUNCA abre ni analiza el contenido
+del paquete DNS (el nombre de dominio consultado). Por lo tanto, el
+sistema no tiene forma de distinguir una consulta a "google.com" de
+una consulta a un dominio generado aleatoriamente como
+"xj3kdqp91z.com" — ambas se ven identicas a nivel de headers.
+
+Esta es una limitacion de diseno, no de entrenamiento del modelo, y
+vale la pena documentarla asi en tu tesis: para detectar DGA se
+necesitaria un modulo adicional que inspeccione el contenido de las
+consultas DNS (deep packet inspection), fuera del alcance actual del
+sistema. Es una recomendacion clara de trabajo futuro.
+
+EQUIPOS
+-------
+Solo se necesita PC1 (la laptop u otro equipo de la red).
+
+PASO 1: CREAR EL ENTORNO VIRTUAL (en PC1)
+---------------------------------------------
+cd pruebas_ids\06_dns_dga
+python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+PASO 2: EJECUTAR EL SERVICIO DE INFERENCIA
+----------------------------------------------
+Ver instrucciones en 00_LEEME_GENERAL.txt
+
+PASO 3: LANZAR LA SIMULACION (en PC1)
+--------------------------------------------
+venv\Scripts\Activate.ps1
+python simulador_dga.py --cantidad 50 --retardo 0.5
+
+Parametros:
+  --cantidad  cuantos dominios aleatorios generar y resolver
+  --retardo   segundos de espera entre cada consulta
+
+RESULTADO A DOCUMENTAR
+--------------------------
+Confirma que en la consola del servicio de inferencia no aparece
+ninguna alerta relacionada a estas consultas DNS. Adjunta esta
+evidencia junto con las demas en tu capitulo de resultados.

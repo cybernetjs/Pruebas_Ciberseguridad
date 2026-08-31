@@ -1,0 +1,47 @@
+PRUEBAS DE VALIDACION DEL SISTEMA IDS/IPS - CyberNetJS
+========================================================
+
+Este paquete contiene 6 pruebas de ataque para validar el sistema completo
+(sistema-captura en Raspberry Pi + servicio-inferencia en la laptop).
+
+RESULTADO ESPERADO DE CADA PRUEBA (segun el diseno actual del sistema):
+
+01_ddos_saliente        -> SI deberia detectarse (firmas + IA)
+02_escaneo_puertos      -> Parcial: el detector de firmas puede marcarlo
+                           como "flooding" (etiqueta imprecisa pero se activa)
+03_fuerza_bruta         -> Depende de la velocidad del ataque
+04_dos_dispositivo      -> SI deberia detectarse (firmas + IA)
+05_c2_beaconing         -> NO deberia detectarse (limitacion conocida)
+06_dns_dga              -> NO deberia detectarse (limitacion conocida)
+
+Las pruebas 05 y 06 se incluyen a proposito aunque se espere que fallen:
+sirven para documentar con evidencia real las limitaciones del sistema
+en el capitulo de resultados/discusion de la tesis.
+
+REQUISITOS GENERALES
+---------------------
+- Una PC1 (equipo atacante): puede ser la misma laptop u otro equipo
+  conectado al mismo router Archer AX12.
+- Una PC2 (equipo victima / origen de trafico "comprometido"): puede ser
+  la misma laptop donde corre servicio-inferencia, u otro dispositivo.
+- Python 3.10+ instalado en el equipo atacante.
+- El servicio-inferencia.exe debe estar corriendo en la laptop mientras
+  se ejecuta cada prueba, para poder observar las alertas en vivo.
+
+ANTES DE CADA PRUEBA
+---------------------
+1. Abre una terminal y deja corriendo el servicio de inferencia:
+   cd servicio-inferencia\out\build\x64-Debug
+   .\servicio_inferencia.exe 9999 eventos_procesados.csv C:\Users\JOSE\Documents\Sistema_Ciberseguridad_CyberNetJS\modelos-arboles\modelo_iot23_arboles.json
+
+2. Confirma que la Raspberry Pi esta corriendo sistema-captura y mandando
+   trafico (deberias ver "Eventos procesados: N" subiendo en la consola).
+
+3. Anota la hora exacta antes de lanzar cada ataque, para poder despues
+   ubicar las lineas correspondientes en eventos_procesados.csv.
+
+DESPUES DE CADA PRUEBA
+------------------------
+Guarda una captura de pantalla de la consola del servicio-inferencia
+mostrando (o no mostrando) las alertas correspondientes. Esa evidencia
+va directo a tu capitulo de resultados.
