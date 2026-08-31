@@ -31,6 +31,9 @@ PASO 3: LANZAR EL ATAQUE (en PC1)
 ------------------------------------
 venv\Scripts\Activate.ps1
 python ataque_ddos_saliente.py --destino 192.168.18.22 --puerto 80 --hilos 50 --duracion 20
+python ataque_ddos_saliente.py --destino 192.168.18.7 --puerto 80 --hilos 50 --duracion 20
+
+Si con eso todavía no dispara, sube --hilos a 100.
 
 Parametros:
   --destino   IP de PC2 (la victima simulada)

