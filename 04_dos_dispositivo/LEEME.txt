@@ -27,7 +27,7 @@ Ver instrucciones en 00_LEEME_GENERAL.txt
 PASO 3: LANZAR EL ATAQUE (en PC1)
 --------------------------------------
 venv\Scripts\Activate.ps1
-python ataque_dos.py --destino 192.168.18.22 --puerto 80 --duracion 20
+python ataque_dos.py --destino 192.168.18.10 --puerto 80 --duracion 20 --hilos 80
 
 Este script usa un solo hilo pero envia paquetes lo mas rapido
 posible (sin threading), para simular el patron de un dispositivo
