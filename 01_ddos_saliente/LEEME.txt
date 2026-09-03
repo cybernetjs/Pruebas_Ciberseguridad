@@ -34,6 +34,12 @@ python ataque_ddos_saliente.py --destino 192.168.18.22 --puerto 80 --hilos 50 --
 python ataque_ddos_saliente.py --destino 192.168.18.7 --puerto 80 --hilos 50 --duracion 20
 python ataque_udp_flood.py --destino 192.168.18.10 --puerto 5000 --duracion 15
 
+cd Pruebas_Ciberseguridad\01_ddos_saliente
+venv\Scripts\Activate.ps1
+Get-Date
+python ataque_ddos_saliente.py --destino <IP_DEL_CELULAR> --puerto 5000 --duracion 20
+Get-Date
+
 Si con eso todavía no dispara, sube --hilos a 100.
 
 Parametros:
