@@ -52,3 +52,11 @@ Corre el escaneo con -T4 y con -T2 por separado, y anota si en cada
 caso salio o no alguna alerta. Esto te da evidencia de que la
 deteccion depende de la velocidad del escaneo, un hallazgo relevante
 para tu tesis.
+
+Get-Date
+nmap -p 1-1000 -T4 <IP_de_la_Raspberry_o_de_otro_equipo_en_la_AX12>
+Get-Date
+
+Get-Date
+nmap -p 1-1000 -T2 <misma_IP>
+Get-Date
