@@ -64,3 +64,5 @@ pip install paramiko==3.4.0
 Get-Date
 python fuerza_bruta.py --destino <IP_del_equipo_victima> --puerto 22 --usuario sistemas --diccionario diccionario.txt --retardo 0
 Get-Date
+
+python servidor_ssh_prueba.py --puerto 22
