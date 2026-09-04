@@ -1,4 +1,3 @@
-raspberry
 admin
 12345
 root
@@ -8,3 +7,5 @@ default
 letmein
 test
 qwerty
+raspberry
+ciberseguridad

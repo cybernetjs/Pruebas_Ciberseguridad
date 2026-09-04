@@ -58,3 +58,5 @@ resultado valido para documentar: confirma la limitacion del
 sistema ante ataques lentos, igual que con el C2 beaconing.
 
 Corre ambos casos y compara los resultados en tu tabla de hallazgos.
+
+pip install paramiko==3.4.0
