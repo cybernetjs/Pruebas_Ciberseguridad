@@ -58,6 +58,8 @@ RESULTADO A DOCUMENTAR
 --------------------------
 Deja correr la prueba completa (con --intervalo 15 y --repeticiones 20
 son 5 minutos aprox). Confirma en la consola del servicio de
-inferencia que NO aparecen alertas durante toda la prueba, y adjunta
-esa captura junto con el CSV de eventos como evidencia de la
-limitacion documentada.
+inferencia .
+
+Get-Date
+python simulador_beacon.py --destino <IP_de_PC2> --puerto 8080 --intervalo 15 --repeticiones 20
+Get-Date
